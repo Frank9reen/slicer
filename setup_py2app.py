@@ -47,10 +47,6 @@ INCLUDES = [
 ]
 
 PACKAGES = [
-    "encodings",
-    "collections",
-    "importlib",
-    "io",
     "PIL",
     "numpy",
     "pandas",
@@ -58,22 +54,12 @@ PACKAGES = [
     "scipy",
     "sklearn",
     "skimage",
-    "cv2",
     "reportlab",
     "PyPDF2",
     "piexif",
     "pymupdf",
-    "fitz",
     "pdf2image",
     "qrcode",
-    "tkinter",
-    "color",
-    "core",
-    "export",
-    "ui",
-    "tools",
-    "utils",
-    "project",
 ]
 
 EXCLUDES = [
@@ -82,6 +68,10 @@ EXCLUDES = [
     "unittest",
     "test",
     "tests",
+    "numpy.tests",
+    "pandas.tests",
+    "scipy.tests",
+    "sklearn.tests",
     "setuptools",
     "distutils",
 ]
