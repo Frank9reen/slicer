@@ -24,12 +24,13 @@ class NullWriter:
         # Возвращаем фиктивный файловый дескриптор
         return -1
 
-# В скомпилированном GUI приложении (cx_Freeze) перенаправляем stderr и stdout,
-# чтобы библиотеки (sklearn, scipy, numpy) не открывали консоль
-# Проверяем как sys.frozen, так и наличие cx_Freeze атрибутов
+# В скомпилированном GUI приложении на Windows (cx_Freeze) перенаправляем stderr и stdout,
+# чтобы библиотеки (sklearn, scipy, numpy) не открывали консоль.
+# На macOS (py2app и др.) stderr оставляем — иначе ошибки запуска не видны (Launch error).
+# Проверяем как sys.frozen, так и наличие PyInstaller атрибутов
 is_frozen = (hasattr(sys, 'frozen') and sys.frozen) or hasattr(sys, '_MEIPASS')
 
-if is_frozen:
+if is_frozen and sys.platform == 'win32':
     # Сохраняем оригинальные потоки на случай, если понадобятся
     sys._original_stderr = sys.stderr
     sys._original_stdout = sys.stdout
@@ -61,5 +62,15 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BaseException:
+        import traceback
+        log_path = os.path.expanduser("~/slicer_crash.log")
+        try:
+            with open(log_path, "w", encoding="utf-8") as f:
+                f.write(traceback.format_exc())
+        except OSError:
+            pass
+        raise
 
