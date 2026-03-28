@@ -54,12 +54,20 @@ PACKAGES = [
     "scipy",
     "sklearn",
     "skimage",
+    "cv2",
     "reportlab",
     "PyPDF2",
     "piexif",
     "pymupdf",
     "pdf2image",
     "qrcode",
+    "color",
+    "core",
+    "export",
+    "ui",
+    "tools",
+    "utils",
+    "project",
 ]
 
 EXCLUDES = [
@@ -72,8 +80,6 @@ EXCLUDES = [
     "pandas.tests",
     "scipy.tests",
     "sklearn.tests",
-    "setuptools",
-    "distutils",
 ]
 
 
