@@ -5,6 +5,11 @@ import os
 import sys
 
 
+def _py2app_resources_dir():
+    """py2app выставляет RESOURCEPATH на .../MyApp.app/Contents/Resources."""
+    return os.environ.get("RESOURCEPATH")
+
+
 def get_base_path():
     """
     Возвращает базовый путь к приложению.
@@ -14,6 +19,10 @@ def get_base_path():
     Returns:
         str: Базовый путь к приложению
     """
+    rp = _py2app_resources_dir()
+    if rp:
+        return rp
+
     if getattr(sys, 'frozen', False):
         # Скомпилированное приложение
         # В cx_Freeze sys.executable указывает на exe файл
@@ -49,6 +58,8 @@ def get_resource_path(relative_path):
     
     if getattr(sys, 'frozen', False):
         # В скомпилированном приложении
+        if _py2app_resources_dir():
+            return os.path.join(base_path, relative_path)
         if hasattr(sys, '_MEIPASS'):
             # PyInstaller: ресурсы могут быть в _MEIPASS или в папке с exe
             # Проверяем оба варианта
