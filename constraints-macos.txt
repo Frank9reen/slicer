@@ -1,0 +1,4 @@
+# Сборка .app на GitHub: не тянуть NumPy/SciPy только под macOS 14+,
+# иначе на Intel с macOS 12–13 падает dlopen (____chkstk_darwin / libSystem).
+numpy==1.26.4
+scipy==1.11.4
