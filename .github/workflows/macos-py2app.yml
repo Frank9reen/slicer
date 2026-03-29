@@ -7,16 +7,33 @@ on:
   pull_request:
     branches: ["main", "master"]
 
+# Две сборки: arm64 (M1/M2/M3) и x86_64 (Intel). Нативные .so (Pillow и др.)
+# привязаны к архитектуре — одна .app не подходит для обеих.
+
 jobs:
   build-macos:
-    runs-on: macos-latest
-    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runs-on: macos-latest
+            artifact-name: slicer-macos-app-arm64
+          - runs-on: macos-15-intel
+            artifact-name: slicer-macos-app-intel
+
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 90
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+      - name: Show architecture
+        run: |
+          uname -m
+          python -c "import platform; print(platform.machine())"
 
       - name: Setup Python 3.11.8
         uses: actions/setup-python@v6
@@ -44,6 +61,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: slicer-macos-app
+          name: ${{ matrix.artifact-name }}
           path: dist/slicer.app.zip
           if-no-files-found: error
