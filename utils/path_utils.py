@@ -6,8 +6,18 @@ import sys
 
 
 def _py2app_resources_dir():
-    """py2app выставляет RESOURCEPATH на .../MyApp.app/Contents/Resources."""
-    return os.environ.get("RESOURCEPATH")
+    """Путь к .../MyApp.app/Contents/Resources (py2app)."""
+    env = os.environ.get("RESOURCEPATH")
+    if env and os.path.isdir(env):
+        return env
+    # Запасной вариант, если переменная не выставлена
+    if getattr(sys, "frozen", None) == "macosx_app" and getattr(sys, "executable", None):
+        macos_dir = os.path.dirname(os.path.abspath(sys.executable))
+        contents = os.path.dirname(macos_dir)
+        resources = os.path.join(contents, "Resources")
+        if os.path.isdir(resources):
+            return resources
+    return None
 
 
 def get_base_path():
