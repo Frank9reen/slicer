@@ -12,6 +12,7 @@ APP = ["main.py"]
 VERSION = "4.17"
 
 INCLUDES = [
+    "unittest",
     "export",
     "export.slicer_utils",
     "export.slicer_utils.color_layout_25",
@@ -73,9 +74,7 @@ PACKAGES = [
 EXCLUDES = [
     "matplotlib",
     "pytest",
-    "unittest",
-    "test",
-    "tests",
+    # unittest нельзя исключать: numpy.testing / sklearn тянут его при импорте.
     "numpy.tests",
     "pandas.tests",
     "scipy.tests",
