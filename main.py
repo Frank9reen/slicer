@@ -50,12 +50,29 @@ warnings.filterwarnings('ignore')
 # Дополнительно подавляем все warnings на уровне модуля
 warnings.simplefilter('ignore')
 
-import tkinter as tk
-from grid_editor import GridEditor
+
+def _write_startup_crash():
+    import traceback
+    home = os.path.expanduser("~")
+    text = traceback.format_exc()
+    for log_path in (
+        os.path.join(home, "slicer_crash.log"),
+        os.path.join(home, "Desktop", "slicer_crash.log"),
+    ):
+        try:
+            with open(log_path, "w", encoding="utf-8") as f:
+                f.write(text)
+        except OSError:
+            continue
+        else:
+            break
 
 
 def main():
     """Главная функция запуска приложения"""
+    import tkinter as tk
+    from grid_editor import GridEditor
+
     root = tk.Tk()
     app = GridEditor(root)
     root.mainloop()
@@ -65,12 +82,6 @@ if __name__ == "__main__":
     try:
         main()
     except BaseException:
-        import traceback
-        log_path = os.path.expanduser("~/slicer_crash.log")
-        try:
-            with open(log_path, "w", encoding="utf-8") as f:
-                f.write(traceback.format_exc())
-        except OSError:
-            pass
+        _write_startup_crash()
         raise
 
